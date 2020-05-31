@@ -24,14 +24,22 @@ def dft(values):
 def fft(values):
     signal = np.asarray(values, dtype=float)
     N = len(signal)
+
+    p = N//2 - 1
+
+    if p < N//2:
+        p = p
+    elif p >= N//2:
+        p = p + N//2
+    print("N = ", N)
     if N <= 2:
         return dft(signal)
     else:
         signal_even = fft(signal[::2])
         signal_odd = fft(signal[1::2])
         terms = np.exp(-2j * np.pi * np.arange(N) / N)
-        return np.concatenate([signal_even + terms[:N // 2] * signal_odd,
-                               signal_even + terms[N // 2:] * signal_odd])
+        return np.concatenate([signal_even + terms[:p+1] * signal_odd,
+                               signal_even + terms[p+1:] * signal_odd])
 
 signal = generate_random_signal(1200, 8)
 t = np.linspace(0, 5, 1024)
